@@ -1,0 +1,74 @@
+<style type="text/css">
+body{color:white;font-family:sans-serif}
+table{text-align: center;display: inline}
+table,pre{color:black}
+td{border: 1px black solid;background-color:white;width:25px;height:25px}
+.main{display: flex;user-select: none; /* standard syntax */
+-webkit-user-select: none; /* webkit (safari, chrome) browsers */
+-moz-user-select: none; /* mozilla browsers */
+-khtml-user-select: none; /* webkit (konqueror) browsers */
+-ms-user-select: none; /* IE10+ */}
+.main div{flex: 1;text-align:center;cursor:pointer}
+.main{margin-bottom:20px}
+#log{margin-top:0;border: 1px black solid;background-color:white;height:100px;overflow:scroll}
+</style>
+<body><div id="d1" class='main'></div><div id="d2" class='main'></div>Log:<pre id="log"></pre></body>
+<script type="text/javascript">
+function d(sides, dice) {
+  return Array.from({ length: dice }, () => Math.floor(Math.random() * sides) + 1);
+}
+function record(sides, rolls, time=false) {
+  let out = time ? new Date().toLocaleTimeString().split(" ")[0] : `${player}:`;
+  out += ` Rolled ${(rolls.length + 'd' + sides).padStart(4, '\xa0')}:\xa0\xa0\xa0\xa0< ${rolls.join(" + ")} >`;
+  if (rolls.length > 1) { out += ` = ${rolls.reduce((acc, roll) => (acc + roll), 0)}`; }
+  out += '\n';
+  return out;
+}
+
+let die = [20, 6, 8, 10, 12];
+let dice_count = 2;
+let init_rolls = die.length * dice_count;
+
+const f = document.createDocumentFragment();
+for(let dice = 1; dice <= dice_count; ++dice) {
+  die.forEach(sides => {
+    const b = document.createElement('div');
+    const title = document.createElement('b');
+    title.textContent = `${dice}d${sides}`;
+    b.appendChild(title);
+    b.appendChild(document.createElement('hr'));
+    const tbl = document.createElement('table');
+    b.addEventListener("click", function() {
+      const rolls = d(sides, dice);
+
+      if (init_rolls <= 0) {
+        log.innerText += record(sides, rolls, true);
+        log.scrollTop = log.scrollHeight;
+      } else {
+        --init_rolls;
+      }
+
+      tbl.innerHTML = "";
+      setTimeout(() => {
+        const tr = tbl.insertRow();
+        rolls.forEach((roll) => {
+          const td = tr.insertCell();
+          if (roll == 1) {
+            td.style.color = 'white';
+            td.style.backgroundColor = 'red';
+          } else if (roll == sides) {
+            td.style.color = 'white';
+            td.style.backgroundColor = 'green';
+          }
+          td.textContent = roll;
+        })
+      }, 50);
+    })
+    b.click();
+    b.appendChild(tbl);
+
+    f.appendChild(b);
+  })
+  document.querySelector(`#d${dice}`).appendChild(f);
+}
+</script>

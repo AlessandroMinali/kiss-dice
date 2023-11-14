@@ -1,0 +1,16 @@
+{
+  "name": "KISS dice",
+  "version": "1.0.0",
+  "manifest_version": 1,
+  "icon": "/kiss-dice/kiss.png",
+  "author": "Alessandro Minali",
+  "homepage_url": "https://github.com/AlessandroMinali/kiss-dice",
+  "description": "One-click dice rolling. What else needs to be said.",
+  "action": {
+    "title": "KISS dice",
+    "icon": "/kiss-dice/kiss.svg",
+    "popover": "./kiss-dice/index.html",
+    "height": 315,
+    "width": 500
+  }
+}
