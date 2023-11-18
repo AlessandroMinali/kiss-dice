@@ -12,17 +12,26 @@ td{border: 1px black solid;background-color:white;width:25px;height:25px}
 .main{margin-bottom:20px}
 #log{margin-top:0;border: 1px black solid;background-color:white;height:100px;overflow:scroll}
 </style>
-<body><div id="d1" class='main'></div><div id="d2" class='main'></div>Log:<pre id="log"></pre></body>
+<body><div id="d1" class='main'></div><div id="d2" class='main'></div>Log:<pre id="log"></pre><button onclick="custom_roll()">Custom Roll</button><input type="text" id="custom"/></body>
 <script type="text/javascript">
 function d(sides, dice) {
   return Array.from({ length: dice }, () => Math.floor(Math.random() * sides) + 1);
 }
-function record(sides, rolls, time=false) {
-  let out = time ? new Date().toLocaleTimeString().split(" ")[0] : `${player}:`;
-  out += ` Rolled ${(rolls.length + 'd' + sides).padStart(4, '\xa0')}:\xa0\xa0\xa0\xa0< ${rolls.join(" + ")} >`;
+function custom_roll() {
+  if (match = custom.value.match(/^(\d+)d(\d+)$/i)) {
+    record(match[2], d(match[2], match[1]))
+  } else {
+    log.innerText += `Invalid Roll: ${custom.value}. Must be in form: {number}d{number}.\n`;
+    log.scrollTop = log.scrollHeight;
+  }
+}
+function record(sides, rolls) {
+  let out = new Date().toLocaleTimeString().split(" ")[0];
+  out += ` Rolled ${(rolls.length + 'd' + sides).padStart(4, '\xa0')}:\n<${rolls.join(" + ")}>`;
   if (rolls.length > 1) { out += ` = ${rolls.reduce((acc, roll) => (acc + roll), 0)}`; }
   out += '\n';
-  return out;
+  log.innerText += out;
+  log.scrollTop = log.scrollHeight;
 }
 
 let die = [20, 6, 8, 10, 12];
@@ -42,8 +51,7 @@ for(let dice = 1; dice <= dice_count; ++dice) {
       const rolls = d(sides, dice);
 
       if (init_rolls <= 0) {
-        log.innerText += record(sides, rolls, true);
-        log.scrollTop = log.scrollHeight;
+        record(sides, rolls);
       } else {
         --init_rolls;
       }
