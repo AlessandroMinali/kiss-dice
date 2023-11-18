@@ -12,7 +12,7 @@ td{border: 1px black solid;background-color:white;width:25px;height:25px}
 .main{margin-bottom:20px}
 #log{margin-top:0;border: 1px black solid;background-color:white;height:100px;overflow:scroll}
 </style>
-<body><div id="d1" class='main'></div><div id="d2" class='main'></div>Log:<pre id="log"></pre><button onclick="custom_roll()">Custom Roll</button><input type="text" id="custom"/></body>
+<body><div id="d1" class='main'></div><div id="d2" class='main'></div>Log:<pre id="log"></pre><input type="text" id="custom"/><button onclick="custom_roll()">Custom Roll</button></body>
 <script type="text/javascript">
 function d(sides, dice) {
   return Array.from({ length: dice }, () => Math.floor(Math.random() * sides) + 1);
@@ -25,6 +25,12 @@ function custom_roll() {
     log.scrollTop = log.scrollHeight;
   }
 }
+custom.addEventListener("keypress", function(event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    custom_roll()
+  }
+});
 function record(sides, rolls) {
   let out = new Date().toLocaleTimeString().split(" ")[0];
   out += ` Rolled ${(rolls.length + 'd' + sides).padStart(4, '\xa0')}:\n<${rolls.join(" + ")}>`;

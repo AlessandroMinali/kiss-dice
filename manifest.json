@@ -10,7 +10,7 @@
     "title": "KISS dice",
     "icon": "/kiss-dice/kiss.svg",
     "popover": "./kiss-dice/index.html",
-    "height": 350,
+    "height": 380,
     "width": 450
   }
 }
